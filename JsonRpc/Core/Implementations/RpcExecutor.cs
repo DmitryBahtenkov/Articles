@@ -36,55 +36,59 @@ public class RpcExecutor : IRpcExecutor
             return await InvokeMethod(method, rpcService, Array.Empty<Object>());
         }
 
+        // преобразуем параметры, которые мы получили в запросе, в словарь
         var paramsDict = input.Params.Deserialize<Dictionary<string, JsonElement>>()!;
-        
+
+        // создаём массив для значений параметров
         var parametersArray = new object?[parameters.Count];
 
         foreach (var p in paramsDict)
         {
+            // для каждого параметра, который ожидает метод, получаем значение и конвертируем его
+            // строковое представление с помощью класса Convert
             if (parameters.ContainsKey(p.Key))
             {
                 var type = parameters[p.Key];
                 parametersArray[Array.IndexOf(parameterKeys, p.Key)] = Convert.ChangeType(p.Value.ToString(), type);
             }
         }
-        
+
+        // вызываем метод с подготовленными параметрами
         return await InvokeMethod(method, rpcService, parametersArray);
     }
-    
+
     private async Task<RpcResult> InvokeMethod(MethodInfo method, IRpcService service, Object?[] parametersArray)
     {
         if (method.ReturnType == typeof(Task))
         {
-            var task = (Task?)method.Invoke(service, parametersArray);
-            if (task is not null)
+            var task = (Task)method.Invoke(service, parametersArray)!;
+
+            await task;
+            return new RpcResult
             {
-                await task;
-                return new RpcResult
-                {
-                    Method = method.Name
-                };
-            }
+                Method = method.Name,
+                Status = 200
+            };
         }
         else if (method.ReturnType.IsGenericType && method.ReturnType.BaseType == typeof(Task))
         {
-            var task = (Task?) method.Invoke(service, parametersArray);
-            if (task is not null)
+            var task = (Task)method.Invoke(service, parametersArray)!;
+
+            await task;
+            return new RpcResult
             {
-                await task.ConfigureAwait(false);
-                return new RpcResult
-                {
-                    Method = method.Name,
-                    Result = task.GetType().GetProperty("Result")!.GetValue(task)
-                };
-            }
+                Method = method.Name,
+                Result = task.GetType().GetProperty("Result")!.GetValue(task),
+                Status = 200
+            };
         }
         else if (method.ReturnType == typeof(void))
         {
             method.Invoke(service, parametersArray);
             return new RpcResult
             {
-                Method = method.Name
+                Method = method.Name,
+                Status = 200
             };
         }
         else
@@ -93,10 +97,9 @@ public class RpcExecutor : IRpcExecutor
             return new RpcResult
             {
                 Method = method.Name,
-                Result = result
+                Result = result,
+                Status = 200
             };
         }
-
-        return new RpcResult();
     }
 }
