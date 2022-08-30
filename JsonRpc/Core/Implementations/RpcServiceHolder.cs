@@ -39,4 +39,9 @@ public class RpcServiceHolder : IRpcServiceHolder
 
         throw new Exception("Service not found");
     }
+
+    public Dictionary<string, IRpcService> GetServices()
+    {
+        return _rpcServicesDict;
+    }
 }
