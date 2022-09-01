@@ -34,4 +34,9 @@ public class RedisService
 
         return default;
     }
+
+    public async Task<int> ExecuteScript(LuaScript script, object? parameters = null)
+    {
+        return (int)await _database.ScriptEvaluateAsync(script, parameters);
+    }
 }
