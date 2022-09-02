@@ -39,4 +39,22 @@ public class RedisService
     {
         return (int)await _database.ScriptEvaluateAsync(script, parameters);
     }
+    
+    public async Task<TData> GetOrAdd<TData>(string key, Func<Task<TData>> callback)
+    {
+        // пытаемся получить данные из кэша
+        var existingData = await _database.StringGetAsync(key);
+        // если данные существуют, возвращаем их в виде необходимого объекта
+        if (existingData.HasValue)
+        {
+            return JsonSerializer.Deserialize<TData>(existingData.ToString())!;
+        }
+
+        // получаем данные из колбэк-функции
+        var data = await callback();
+        // сохраняем данные с помощью метода, написанного ранее, с истечением через минуту
+        await _database.StringSetAsync(key, JsonSerializer.Serialize(data), expiry: TimeSpan.FromMinutes(1));
+        
+        return data;
+    }
 }
