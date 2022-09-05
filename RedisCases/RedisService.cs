@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Threading.Channels;
 using StackExchange.Redis;
 
 namespace RedisCases;
@@ -56,5 +57,19 @@ public class RedisService
         await _database.StringSetAsync(key, JsonSerializer.Serialize(data), expiry: TimeSpan.FromMinutes(1));
         
         return data;
+    }
+
+    public async Task Publish<TEvent>(TEvent @event)
+    {
+        await _database.PublishAsync(typeof(TEvent).Name, JsonSerializer.Serialize(@event));
+    }
+
+    public async Task Subscribe<TEvent>(Action<TEvent> callback)
+    {
+        await _database.Multiplexer
+            .GetSubscriber()
+            .SubscribeAsync(
+                typeof(TEvent).Name,
+                (channel, value) => callback(JsonSerializer.Deserialize<TEvent>(value!)!));
     }
 }
