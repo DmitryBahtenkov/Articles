@@ -1,0 +1,17 @@
+﻿[
+  {
+  "Id": "a4fff1d7-b3b5-4d98-a02a-33b6a5c3f000",
+  "Username": "firstuser",
+  "Password": "12345"
+  },
+  {
+    "Id": "a7d63511-1e0c-4250-82d3-1bca4523f433",
+    "Username": "seconduser",
+    "Password": "12345"
+  },
+  {
+    "Id": "984ae84e-6065-4eaa-b598-2921da469a97",
+    "Username": "thirduser",
+    "Password": "12345"
+  }
+]

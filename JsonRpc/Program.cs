@@ -1,20 +1,22 @@
+using JsonRpc;
 using JsonRpc.Core.Abstractions;
 using JsonRpc.Core.Implementations;
 using JsonRpc.Core.Models;
 using JsonRpc.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 // добавляем наши сервисы в DI-контейнер
 builder.Services
     .AddScoped<IRpcServiceHolder, RpcServiceHolder>()
     .AddScoped<IRpcExecutor, RpcExecutor>()
     .AddScoped<TestRpcService>()
     .AddScoped<IRpcService, TestRpcService>(x => x.GetRequiredService<TestRpcService>());
+builder.Services.AddSwaggerGen(x => x.DocumentFilter<RpcDocumentFilter>());
 
 var app = builder.Build();
 
