@@ -19,7 +19,13 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<User> CreateUser([FromBody] User user)
     {
+        // сохраняем пользователя
         await _redisService.SetValue(user.Id.ToString(), user);
+        // публикуем событие
+        await _redisService.Publish<CreateUserEvent>(new CreateUserEvent
+        {
+            UserId = user.Id
+        });
         
         return user;
     }

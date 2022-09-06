@@ -61,15 +61,21 @@ public class RedisService
 
     public async Task Publish<TEvent>(TEvent @event)
     {
+        // выполняем метод Publish для публикации сообщения в Redis
+        // первым параметром методя является название канала, в который мы публикуем сообщение
+        // в данном случае это название типа события, например "CreateUserEvent"
         await _database.PublishAsync(typeof(TEvent).Name, JsonSerializer.Serialize(@event));
     }
 
     public async Task Subscribe<TEvent>(Action<TEvent> callback)
     {
+        // Из объекта ConnectionMultiplexer Redis позволяяет получить объект ISubscriber
+        // с помощью которого можно подписаться на события в определённом канале
         await _database.Multiplexer
             .GetSubscriber()
             .SubscribeAsync(
                 typeof(TEvent).Name,
+                        // выполняем callback-функцию с десериализованным сообщением в параметрах
                 (channel, value) => callback(JsonSerializer.Deserialize<TEvent>(value!)!));
     }
 }

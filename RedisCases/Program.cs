@@ -1,4 +1,5 @@
 using RedisCases;
+using RedisCases.Models;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,5 +26,13 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+var redisService = app.Services.GetRequiredService<RedisService>();
+await redisService.Subscribe<CreateUserEvent>((@event =>
+{
+    // выполнение какой-то полезной логики, например отправка email
+    // новому пользователю
+    Console.WriteLine($"User with id {@event.UserId} created");
+}));
 
 app.Run();
