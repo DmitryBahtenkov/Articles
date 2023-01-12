@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Redis", "Redis", "{F7AB157D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisCases", "RedisCases\RedisCases.csproj", "{71B6DBB8-48B9-4379-B21E-34B7BAEBCF48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PgElasticSync", "PgElasticSync\PgElasticSync.csproj", "{E89192B2-BA6F-4655-8164-BA4567C84355}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{71B6DBB8-48B9-4379-B21E-34B7BAEBCF48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71B6DBB8-48B9-4379-B21E-34B7BAEBCF48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71B6DBB8-48B9-4379-B21E-34B7BAEBCF48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E89192B2-BA6F-4655-8164-BA4567C84355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E89192B2-BA6F-4655-8164-BA4567C84355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E89192B2-BA6F-4655-8164-BA4567C84355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E89192B2-BA6F-4655-8164-BA4567C84355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{461B1B66-61E0-4D3E-B792-5A34E7FF5E1A} = {4F6CEB5F-B307-4833-B7CA-C0F4295BA029}

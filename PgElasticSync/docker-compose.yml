@@ -1,0 +1,27 @@
+﻿version: '3.3'
+services:
+  redis:
+    image: redis
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    hostname: "redis"
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: "read_model"
+      POSTGRES_USER: "read_model_owner"
+      POSTGRES_PASSWORD: "qwerty"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  elastic:
+    image: elasticsearch:7.0.0
+    ports:
+      - '9200:9200'
+    environment:
+      discovery.type: single-node
