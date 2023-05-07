@@ -1,10 +1,14 @@
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutofacApi.Posts;
+using AutofacApi.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((containerBuilder) =>
 {
+    containerBuilder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
 });
 
 builder.Services.AddControllers();
@@ -26,7 +30,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-void ConfigureContainer(ContainerBuilder container)
-{
-}
