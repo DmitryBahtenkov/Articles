@@ -1,11 +1,12 @@
 using AutofacApi.Contract;
+using AutofacApi.Posts.Models;
 using AutofacApi.Users.Models;
 
 namespace AutofacApi.Posts.DataAccess;
 
-public class PostRepository : IRepository<User>
+public class PostRepository : IRepository<Post>
 {
-    public Task<User> Create(User model)
+    public Task<Post> Create(Post model)
     {
         throw new NotImplementedException();
     }
@@ -15,17 +16,17 @@ public class PostRepository : IRepository<User>
         throw new NotImplementedException();
     }
 
-    public Task<List<User>> GetAll()
+    public Task<List<Post>> GetAll()
     {
         throw new NotImplementedException();
     }
 
-    public Task<User> GetById(int id)
+    public Task<Post> GetById(int id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<User> Update(User model)
+    public Task<Post> Update(Post model)
     {
         throw new NotImplementedException();
     }

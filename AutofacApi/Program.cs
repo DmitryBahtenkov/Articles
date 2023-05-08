@@ -1,6 +1,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutofacApi.Helpers;
 using AutofacApi.Posts;
 using AutofacApi.Users;
 
@@ -9,6 +10,15 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>((containerBuilder) =>
 {
     containerBuilder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+    containerBuilder.Register<IDateTimeService>(context =>
+    {
+        if (builder.Environment.IsEnvironment("TEST"))
+        {
+            return new StaticDateTimeService(new DateTime(2011, 11, 11));
+        }
+
+        return new DateTimeService();
+    });
 });
 
 builder.Services.AddControllers();
