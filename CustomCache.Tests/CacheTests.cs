@@ -59,7 +59,7 @@ public class CacheTests
     public async Task GetOrAdd_ShouldRemoveLeastRecentlyUsedItem_WhenCacheIsFull()
     {
         // Arrange
-        var cache = new CustomMemoryCache(8);
+        var cache = new CustomMemoryCache(2);
         var key1 = "test1";
         var key2 = "test2";
         var key3 = "test3";

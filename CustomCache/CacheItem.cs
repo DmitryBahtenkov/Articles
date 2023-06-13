@@ -24,10 +24,6 @@ public class CacheItem
     /// </summary>
     public DateTime LastAccess { get; set; }
     /// <summary>
-    /// Размер данных в байтах 
-    /// </summary>
-    public int Size => Marshal.SizeOf(Value);
-    /// <summary>
     /// Узел связного списка,
     /// в котором находится элемент кэша
     /// </summary>

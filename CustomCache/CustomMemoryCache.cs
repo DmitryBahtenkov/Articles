@@ -9,16 +9,12 @@ public class CustomMemoryCache : ICustomMemoryCache
     // связный список элементов кэша для отображения элементов кэша
     // в порядке их использования
     private readonly LinkedList<CacheItem> _cacheItems;
-    // максимальный размер кэша в байтах
+    // максимальный размер кэша
     private readonly int _capacity;
-
-    // текущий размер кэша
-    private int _currentSize;
 
     public CustomMemoryCache(int capacity)
     {
         _capacity = capacity;
-        _currentSize = 0;
         _cache = new ConcurrentDictionary<string, CacheItem>();
         _cacheItems = new LinkedList<CacheItem>();
     }
@@ -31,14 +27,10 @@ public class CustomMemoryCache : ICustomMemoryCache
             // если время истекло
             if (DateTime.UtcNow - item.LastAccess > TimeSpan.FromSeconds(item.TTL))
             {
-                // уменьшаем текущий размер кэша 
-                _currentSize -= item.Size;
                 var data = await getter();
                 // обновляем данные и TTL
                 item.Value = data;
                 item.TTL = ttl;
-                // увеличиваем размер кэша с учётом свежих данных
-                _currentSize += item.Size;
             }
 
             // проставляем текущую дату использования данных
@@ -58,8 +50,6 @@ public class CustomMemoryCache : ICustomMemoryCache
             var newItem = new CacheItem(key, data, ttl);
             // добавляем новую запись в кэш
             _cache[key] = newItem;
-            // увеличиваем размер кэша
-            _currentSize += newItem.Size;
             // помещаем новый элемент в начало кэша
             newItem.Node = _cacheItems.AddFirst(newItem);
             // при необходимости очищаем кэш от старых данных
@@ -86,7 +76,7 @@ public class CustomMemoryCache : ICustomMemoryCache
 
     private void ClearLastRecentlyUsed()
     {
-        while (_currentSize > _capacity)
+        while (_cache.Count > _capacity)
         {
             // Удаляем последний элемент из связного списка и словаря
             var oldestItem = _cacheItems.Last?.Value;
@@ -107,9 +97,6 @@ public class CustomMemoryCache : ICustomMemoryCache
             {
                 _cacheItems.Remove(item.Node);
             }
-
-            // Уменьшаем текущий размер кэша на размер элемента
-            _currentSize -= item.Size;
         }
     }
     
